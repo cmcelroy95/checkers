@@ -147,12 +147,89 @@ function checkLanding(moves, jumps, piece, cx, cy, lx, ly) {
   checkJump(moves, jumps, piece, lx, ly);
 }
 
-/** @function ApplyMove
+/** @function applyMove
   * A function to apply the selected move to the game
   * @param {object} move - the move to apply.
   */
-function applyMove(move) {
+function applyMove(x, y, move) {
   // TODO: Apply the move
-  // TODO: Check for victory
-  // TODO: Start the next turn
+  if(move.type === "slide"){
+    this.board[move.y][move.x] = state.board[y][x];
+    this.board[y][x] = null;
+  }
+  else{
+    move.captures.forEach(function(square){
+      state.board[square.y][square.x] = null;
+    });
+    var index = move.landings.length;
+    state.board[move.landings[index].y][move.landings[index].x] = state.board[y][x];
+    state.board[y][x] = null;
+  }
+}
+
+/** @function checkForVictory
+  * A function to check for a victory
+  */
+function checkForVictory(){
+  var wCount = 0;
+  var bCount = 0;
+  for(y = 0; y < 10; y++){
+    for(x = 0; x < 10; x++){
+      if(state.board[y][x] === "w" || state.board[y][x] === 'wk')
+        wCount++;
+      if(state.board[y][x] === "b" || state.board[y][x] === 'bk')
+        bCount++;
+    }
+  }
+  if(wCount == 0){
+    state.over = true;
+    return 'black wins';
+  }
+  if(bCount == 0){
+    state.over = true;
+    return 'white wins';
+  }
+  return null;
+}
+
+/** @function nextTurn
+  * A function to give the control state to the other player
+  */
+function nextTurn(){
+  if(state.turn === 'b') state.turn = 'w';
+  else state.turn = 'b';
+}
+
+/** @function printBoard
+  * A function to print the board
+  */
+function printBoard() {
+  var checkersTable = $('<table></table>');
+  checkersTable.attr('width', '100%').attr('height', '100%');
+  for(var i=0; i<8; i++)
+  {
+    var row = $('<tr></tr>');
+    for(var j=0; j<8; j++)
+    {
+      var square = $('<td></td>');
+      if(i%2 == j%2)
+      {
+        square.addClass('white');
+      }
+      else
+      {
+        square.addClass('black');
+      }
+      row.append(square);
+    }
+    checkersTable.append(row);
+  }
+  $('#board').append(checkersTable);
+}
+
+/** @function main
+  * A function to be run when the page loads
+  */
+function main() {
+  printBoard();
 }
