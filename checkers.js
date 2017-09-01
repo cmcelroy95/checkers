@@ -273,9 +273,20 @@ function main() {
             console.log(index + ". You can " + getJumpString(move));
           }
         })
+         moverl.question("Pick your move from the list: ", function(answer){
+           var command = answer.substring(0, 1);
+           if(command === 'c') return;
+           command = parseInt(command);
+           if(command === NAN || command >= moves.length) return;
+           applyMove(x, y, moves[command]);
+           checkForVictory();
+           nextTurn();
+         });
       }
     }
   });
 }
+
+function
 
 main();
