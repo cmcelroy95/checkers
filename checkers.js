@@ -17,7 +17,8 @@ var state = {
     ['b',null,'b',null,'b',null,'b',null,'b',null],
     [null,'b',null,'b',null,'b',null,'b',null,'b'],
     ['b',null,'b',null,'b',null,'b',null,'b',null]
-  ]
+  ],
+  captures: {w: 0, b: 0}
 }
 
 /** @function getLegalMoves
@@ -161,6 +162,11 @@ function applyMove(x, y, move) {
     state.board[y][x] = null;
   } else {
     move.captures.forEach(function(square){
+<<<<<<< HEAD
+=======
+      var piece = state.board[square.y][square.x];
+      state.captures[piece.substring(0,1)]++;
+>>>>>>> e803bcf87d8176ace6e486f079b91f521e808d82
       state.board[square.y][square.x] = null;
     });
     var index = move.landings.length - 1;
@@ -177,6 +183,7 @@ function applyMove(x, y, move) {
   * has yet won.
   */
 function checkForVictory() {
+<<<<<<< HEAD
   var wCount = 0;
   var bCount = 0;
   for(y = 0; y < 10; y++) {
@@ -194,10 +201,29 @@ function checkForVictory() {
     return 'black wins';
   }
   if(bCount == 0) {
+=======
+  if(state.captures.w == 20) {
+    state.over = true;
+    return 'black wins';
+  }
+  if(state.captures.b == 20) {
+>>>>>>> e803bcf87d8176ace6e486f079b91f521e808d82
     state.over = true;
     return 'white wins';
   }
   return null;
+<<<<<<< HEAD
+=======
+}
+
+/** @function nextTurn()
+  * Starts the next turn by changing the
+  * turn property of state.
+  */
+function nextTurn() {
+  if(state.turn === 'b') state.turn = 'w';
+  else state.turn = 'b';
+>>>>>>> e803bcf87d8176ace6e486f079b91f521e808d82
 }
 
 /** @function nextTurn()
