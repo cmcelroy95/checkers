@@ -1,4 +1,6 @@
 // checkers.js
+const readline = require('readline');
+
 
 /** The state of the game */
 var state = {
@@ -166,8 +168,11 @@ function applyMove(x, y, move) {
     state.board[y][x] = null;
   } else {
     move.captures.forEach(function(square){
+<<<<<<< HEAD
+=======
       var piece = state.board[square.y][square.x];
       state.captures[piece.substring(0,1)]++;
+>>>>>>> e803bcf87d8176ace6e486f079b91f521e808d82
       state.board[square.y][square.x] = null;
     });
     var index = move.landings.length - 1;
@@ -184,15 +189,47 @@ function applyMove(x, y, move) {
   * has yet won.
   */
 function checkForVictory() {
+<<<<<<< HEAD
+  var wCount = 0;
+  var bCount = 0;
+  for(y = 0; y < 10; y++) {
+    for(x = 0; x < 10; x++) {
+      if(state.board[y][x] === "w" || state.board[y][x] === "wk") {
+        wCount++;
+      }
+      if(state.board[y][x] === "b" || state.board[y][x] === "bk") {
+        bCount++;
+      }
+    }
+  }
+  if(wCount == 0) {
+    state.over = true;
+    return 'black wins';
+  }
+  if(bCount == 0) {
+=======
   if(state.captures.w == 20) {
     state.over = true;
     return 'black wins';
   }
   if(state.captures.b == 20) {
+>>>>>>> e803bcf87d8176ace6e486f079b91f521e808d82
     state.over = true;
     return 'white wins';
   }
   return null;
+<<<<<<< HEAD
+=======
+}
+
+/** @function nextTurn()
+  * Starts the next turn by changing the
+  * turn property of state.
+  */
+function nextTurn() {
+  if(state.turn === 'b') state.turn = 'w';
+  else state.turn = 'b';
+>>>>>>> e803bcf87d8176ace6e486f079b91f521e808d82
 }
 
 /** @function nextTurn()
@@ -204,6 +241,7 @@ function nextTurn() {
   else state.turn = 'b';
 }
 
+<<<<<<< HEAD
 /** @function clearHighlights
   * Clears all highligted squares
   */
@@ -266,3 +304,86 @@ function setup() {
 }
 
 setup();
+=======
+/** @function printBoard
+  * Prints the current state of the game board
+  * to the console.
+  */
+function printBoard() {
+  console.log("   a b c d e f g h i j");
+  state.board.forEach(function(row, index){
+    var ascii = row.map(function(square){
+      if(!square) return '_';
+      else return square;
+    }).join('|');
+    console.log(index, ascii);
+  });
+  console.log('\n');
+}
+
+/** @function getJumpString
+  * Helper function to get the results of a jump move
+  * as a printable string.
+  * @return {String} A string describing the jump sequence
+  */
+function getJumpString(move) {
+  var jumps = move.landings.map(function(landing) {
+    return String.fromCharCode(97 + landing.x) + "," + landing.y;
+  }).join(' to ');
+  return "jump to " + jumps + " capturing " + move.captures.length + " piece" + ((move.captures.length > 1)?'s':'');
+}
+
+/** @function main
+  * Entry point to the program.
+  * Starts the checkers game.
+  */
+function main() {
+  // initialize readline
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  // print the board
+  printBoard();
+  // offer instructions
+  console.log(state.turn + "'s turn");
+  rl.question("Pick a piece to move, (letter, number): ", function(answer) {
+    // Figure out what piece the user asked to move
+    var match = /([a-j]),?\s?([0-9])/.exec(answer);
+    if(match) {
+      var x = match[1].toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0);
+      var y = parseInt(match[2]);
+      var piece = state.board[y][x];
+      // Get available moves
+      var moves = getLegalMoves(piece, x, y);
+      if(moves.length === 0) {
+        console.log("\nNo legal moves for ", piece, "at", x, ",", y);
+      } else {
+        // Print available moves
+        console.log("\nAvailable moves for ", match[1] + "," + match[2]);
+        console.log("C. Cancel")
+        moves.forEach(function(move, index) {
+          if(move.type === 'slide') {
+            console.log(index + ". You can slide to " + String.fromCharCode(97 + move.x) + "," + move.y);
+          } else {
+            console.log(index + ". You can " + getJumpString(move));
+          }
+        })
+         moverl.question("Pick your move from the list: ", function(answer){
+           var command = answer.substring(0, 1);
+           if(command === 'c') return;
+           command = parseInt(command);
+           if(command === NAN || command >= moves.length) return;
+           applyMove(x, y, moves[command]);
+           checkForVictory();
+           nextTurn();
+         });
+      }
+    }
+  });
+}
+
+function
+
+main();
+>>>>>>> bd276534353d3f08189d04e85d0848015ec33a9c
